@@ -9,3 +9,6 @@ total=sum(w for _, w in tasks)
 print("\n今日计划")
 for name,w in tasks:
     print(f"{name}:{hours*w/total:.1f}小时")
+with open("plan.txt","w",encoding="utf-8") as f:
+    f.write(f"{name}:{hours*w/total:.1f}小时")
+
