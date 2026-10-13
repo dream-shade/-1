@@ -1,0 +1,7 @@
+# 别人 clone 你的项目后，一行命令就能装出一样的依赖：
+#   pip install -r requirements.txt
+# 版本写区间而不是写死，既能复现又不会卡死在小版本上。
+openai>=3.29,<4
+python-dotenv>=1.0
+
+# 已装好的不用再装（你环境里 openai 3.29.0 已经在了）。
