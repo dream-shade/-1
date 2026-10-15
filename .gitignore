@@ -18,6 +18,8 @@ ENV/
 .env.*
 !.env.example
 config.py
+key.txt
+ai_chat.py
 secrets.json
 *.pem
 
