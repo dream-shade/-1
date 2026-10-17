@@ -5,7 +5,17 @@ from openai import OpenAI
 today = date.today()
 
 # 2. 收集输入并构造提示词
-user_record = input("请输入你今天的成果：")
+print("输入今日成果，按eof结束")
+lines=[]
+while True:
+    line=input()
+    if line=="eof":
+        break
+    else:
+        lines.append(line)
+user_record="\n".join(lines)
+
+
 prompt = f"以上是我今日的成果：{user_record}。请总结今天的记录，简要一点，最后仅把总结返回给我"
 
 # 3. 读密钥
