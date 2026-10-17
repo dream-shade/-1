@@ -20,6 +20,7 @@ ENV/
 config.py
 key.txt
 ai_chat.py
+aichat.py
 secrets.json
 *.pem
 
