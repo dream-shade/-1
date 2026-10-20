@@ -33,3 +33,18 @@ desktop.ini
 # ==================== 运行产物 ====================
 plan.txt
 my_journal.md
+# 私人日记，绝对不传
+my_journal.md
+my_sum.md
+
+# 无关的草稿和测试文件
+mock_server.py
+daily_plan.py
+singup.py
+singu.py
+counter.py
+score.py
+test_calc.py
+test_counter.py
+picture.py
+fix_repo.ps1
