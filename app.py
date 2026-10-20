@@ -1,19 +1,36 @@
 import streamlit as st
 import os
-import re
 from datetime import date
 from openai import OpenAI
+import re
 
-st.title("🧠 我的 AI 第二大脑")
+# ================= 密钥安全逻辑 =================
+st.sidebar.title("🔑 API 设置")
 
-# 1. 读取密钥
-with open("key.txt", "r", encoding="utf-8") as f:
-    my_key = f.read().strip()
+# 给用户一个输入框，默认隐藏密码
+user_input_key = st.sidebar.text_input("可填入你自己的 DeepSeek API Key", type="password")
+
+if user_input_key:
+    
+    my_key = user_input_key
+    st.sidebar.success("✅ 已使用自定义 API Key")
+else:
+  
+    try:
+        with open("key.txt", "r", encoding="utf-8") as f:
+            my_key = f.read().strip()
+        st.sidebar.info("ℹ️ 正在使用系统默认体验额度")
+    except FileNotFoundError:
+        # 如果在云端部署没有 key.txt，兜底让你填
+        st.sidebar.error("❌ 未找到系统 Key，请自己填写")
+        st.stop() # 停止运行，防止报错
 
 client = OpenAI(
     api_key=my_key,
     base_url="https://api.deepseek.com"
 )
+
+# ... 下面的代码保持不变 ...
 
 # ================= 侧边栏逻辑 =================
 st.sidebar.title("📜 历史记录")
