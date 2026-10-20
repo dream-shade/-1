@@ -5,7 +5,7 @@ from openai import OpenAI
 today = date.today()
 
 # 2. 收集输入并构造提示词
-print("输入今日成果，按eof结束")
+print("输入今日成果,按eof结束")
 lines=[]
 while True:
     line=input()
