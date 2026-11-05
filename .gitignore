@@ -30,38 +30,27 @@ secrets.json
 Thumbs.db
 desktop.ini
 
-# ==================== 运行产物 ====================
-plan.txt
-my_journal.md
-# 私人日记，绝对不传
+# ==================== 私人数据：绝不入库 ====================
+# 本地日记与复盘，只留在自己电脑上
 my_journal.md
 my_sum.md
-
-# 无关的草稿和测试文件
-mock_server.py
-daily_plan.py
-singup.py
-singu.py
-counter.py
-score.py
-test_calc.py
-test_counter.py
-picture.py
-fix_repo.ps1
-key.txt
-math.png
-math_notes.md
-math_notes.json
-data.bin# 私人数据与自动生成内容
+# 个人学习数据、对话向量库、生成的图片
 data/
 asset/
 chroma_db/
+math.png
+math_notes.md
+math_notes.json
+data.bin
 
-# 废弃的草稿文件
+# ==================== 运行产物 ====================
+plan.txt
+
+# ==================== 废弃草稿（保留在本地，不入库） ====================
 on.py
-_diag_api.py
 daily_plan.py
-work.py
-stack_demo.py
-rag_demo.py
-stat.py
+mock_server.py
+singup.py
+fix_repo.ps1
+src/stat.py
+src/stack_demo.py
