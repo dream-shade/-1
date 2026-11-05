@@ -48,3 +48,20 @@ test_calc.py
 test_counter.py
 picture.py
 fix_repo.ps1
+key.txt
+math.png
+math_notes.md
+math_notes.json
+data.bin# 私人数据与自动生成内容
+data/
+asset/
+chroma_db/
+
+# 废弃的草稿文件
+on.py
+_diag_api.py
+daily_plan.py
+work.py
+stack_demo.py
+rag_demo.py
+stat.py

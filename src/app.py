@@ -1,8 +1,13 @@
 import streamlit as st
-import os
 from datetime import date
+from pathlib import Path
 from openai import OpenAI
 import re
+
+# 路径固定到脚本所在目录，避免工作目录不同导致读不到 key.txt / 写丢 my_journal.md
+BASE_DIR = Path(__file__).resolve().parent
+KEY_PATH = BASE_DIR / "key.txt"
+JOURNAL_PATH = BASE_DIR / "my_journal.md"
 
 # ================= 密钥安全逻辑 =================
 st.sidebar.title("🔑 API 设置")
@@ -17,7 +22,7 @@ if user_input_key:
 else:
   
     try:
-        with open("key.txt", "r", encoding="utf-8") as f:
+        with open(KEY_PATH, "r", encoding="utf-8") as f:
             my_key = f.read().strip()
         st.sidebar.info("ℹ️ 正在使用系统默认体验额度")
     except FileNotFoundError:
@@ -36,8 +41,8 @@ client = OpenAI(
 st.sidebar.title("📜 历史记录")
 
 # 只有存在日记文件时，才执行侧边栏逻辑
-if os.path.exists("my_journal.md"):
-    with open("my_journal.md", "r", encoding="utf-8") as f:
+if JOURNAL_PATH.exists():
+    with open(JOURNAL_PATH, "r", encoding="utf-8") as f:
         history_content = f.read()
     
     # 展开历史记录
@@ -97,7 +102,7 @@ if st.button("让 AI 替我复盘"):
             
             # 保存到文件
             today = date.today()
-            with open("my_journal.md", "a", encoding="utf-8") as f:
+            with open(JOURNAL_PATH, "a", encoding="utf-8") as f:
                 # 注意这里日期前面加上了 ## ，这样正则表达式才能抓取到
                 f.write(f"\n\n## {today}\n\n**我的记录**\n{user_input}\n\n**AI 复盘**\n{ai_reply}")
             
