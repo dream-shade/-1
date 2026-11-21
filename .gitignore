@@ -54,3 +54,5 @@ singup.py
 fix_repo.ps1
 src/stat.py
 src/stack_demo.py
+
+.streamlit/secrets.toml
