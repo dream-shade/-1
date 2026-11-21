@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @"
 # AI 高数解题器
 
@@ -16,3 +17,7 @@ streamlit run math_web.py
 在 .streamlit/secrets.toml 中配置百度 OCR 与 DeepSeek 密钥（该文件已被 gitignore，不会上传）。
 "@ | Out-File -Encoding utf8 README.md
 
+=======
+# -1
+初学实践
+>>>>>>> 467e72a126b5d0b3fdf9827418894d941188e5a2
