@@ -4,6 +4,8 @@ from pathlib import Path
 import sys
 import json 
 import argparse
+import streamlit as st
+
 
 BASE_DIR = Path(__file__).resolve().parent
 KEY_FILE = BASE_DIR.parent / "key.txt"
@@ -18,9 +20,16 @@ try:
 except Exception as e:
     print(f"读取key错误: {e}")
     sys.exit(1)
+st.title("ai高数解题器")
+st.markdown("上传图片或文字，立即解析")
+
+
+
 
 # 2. 核心功能
 def solve_math(image_path):
+    # 在写入之前加这一行
+
     ds_client = OpenAI(api_key=DS_KEY, base_url="https://api.deepseek.com")
     client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
     
@@ -58,8 +67,9 @@ def solve_math(image_path):
         return
 
     # 组装 JSON 数据并保存
-    notes_path = BASE_DIR /"data"/ "math_notes.json"
-    
+    notes_path = BASE_DIR.parent /"data"/ "math_notes.json"
+    # 在写入之前加这一行
+    notes_path.parent.mkdir(parents=True, exist_ok=True)
     # 组装新的字典（你之前漏了这步）
     new_note = {
         "question": text,
@@ -88,4 +98,4 @@ if __name__ == "__main__":
     parser.add_argument("--img", default="math.png", help="图片文件的路径")
     args = parser.parse_args()
     
-    solve_math(args.img)  # 只调用一次
+    solve_math(args.img)  

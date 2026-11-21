@@ -55,4 +55,14 @@ fix_repo.ps1
 src/stat.py
 src/stack_demo.py
 
+
 .streamlit/secrets.toml
+
+
+*.exe
+*.o
+lianxi.py
+read_c_output.py
+sort_student.cpp
+sort_student.exe
+python课程/
