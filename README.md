@@ -1,23 +1,18 @@
-# 🧠 AI Second Brain (AI 第二大脑)
+@"
+# AI 高数解题器
 
-> 专为大学生与个人创作者打造的极简复盘与知识管理工作流。
-> 2026 武汉 1024·人工智能创新生态系列活动 - AI Hackathon 参赛作品。
+基于 Streamlit 的 Web 应用，拍照上传高数题目，自动 OCR 识别并调用 DeepSeek 生成解题步骤。
 
-## 💡 项目背景（痛点）
-当代大学生每天面临海量碎片化信息，传统的日记本容易变成流水账，记完不看，缺乏正向反馈；而市面上的云端笔记软件又存在个人隐私数据泄露的风险。为此，我们开发了这款**轻量级、绝对隐私、由 AI 驱动**的“第二大脑”。
+## 功能
+- 百度 OCR 识别手写/印刷体数学题
+- DeepSeek 大模型解析并输出详细解题过程
+- 支持错题记录与导出
 
-## ✨ 核心功能
-1. **AI 导师级复盘**：极简输入今日收获，接入 DeepSeek 大模型，秒级生成总结与改进建议。
-2. **数据持久化**：日记内容以 Markdown 格式保存于本地，保护用户绝对隐私。
-3. **RAG 检索雏形（阶段性周报）**：通过滑动条选择最近 N 天的记录，利用正则表达式解析本地数据，让 AI 跨时间维度生成全局复盘周报。
-4. **双模式密钥安全**：支持游客使用默认体验额度，也支持高级用户填入自己的 API Key，绝不泄露开发者密钥。
+## 本地运行
+pip install -r requirements.txt
+streamlit run math_web.py
 
-## 🛠️ 技术栈
-- **前端框架**：Streamlit (快速构建 Python Web UI)
-- **大语言模型**：DeepSeek API (兼容 OpenAI SDK)
-- **核心逻辑**：Python 3, 正则表达式 (re), 本地文件系统交互 (os, datetime)
+## 密钥配置
+在 .streamlit/secrets.toml 中配置百度 OCR 与 DeepSeek 密钥（该文件已被 gitignore，不会上传）。
+"@ | Out-File -Encoding utf8 README.md
 
-## 🚀 快速开始 (本地运行)
-1. 克隆本仓库：
-   ```bash
-   git clone https://gitee.com/wu-hangjun/ai-second-brain.git
