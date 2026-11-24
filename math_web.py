@@ -16,15 +16,27 @@ DATA_DIR = BASE_DIR.parent / "data" if (BASE_DIR.parent / "data").exists() else 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 notes_path = DATA_DIR / "math_notes.json"
 
+# 尝试从 Streamlit 的 secrets 中读取，如果没有（比如在本地跑），再读 txt 文件
 try:
-    keys = KEY_FILE.read_text(encoding="utf-8").strip().splitlines()
-    APP_ID = keys[0].strip()       
-    API_KEY = keys[1].strip()      
-    SECRET_KEY = keys[2].strip()   
-    DS_KEY = keys[3].strip()   
-except Exception as e:
-    st.error(f"❌ 读取 key.txt 失败: {e}")
-    st.stop()
+
+    APP_ID = st.secrets["baidu"]["APP_ID"]
+    API_KEY = st.secrets["baidu"]["API_KEY"]
+    SECRET_KEY = st.secrets["baidu"]["SECRET_KEY"]
+
+    # DeepSeek
+    DS_KEY = st.secrets["deepseek"]["DS_KEY"]
+except Exception:
+    # 本地开发环境的兜底
+    KEY_FILE = BASE_DIR / "key.txt"
+    try:
+        keys = KEY_FILE.read_text(encoding="utf-8").strip().splitlines()
+        APP_ID = keys[0].strip()       
+        API_KEY = keys[1].strip()      
+        SECRET_KEY = keys[2].strip()   
+        DS_KEY = keys[3].strip()   
+    except Exception as e:
+        st.error(f"❌ 读取密钥失败: {e}")
+        st.stop()
 
 ocr_client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
 ds_client = OpenAI(api_key=DS_KEY, base_url="https://api.deepseek.com")
