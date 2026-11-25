@@ -43,6 +43,8 @@ ds_client = OpenAI(api_key=DS_KEY, base_url="https://api.deepseek.com")
 
 
 # ================= 2. 核心函数区 =================
+import re
+
 def ask_ai(prompt_text):
     """公共的大模型调用函数"""
     try:
@@ -51,9 +53,23 @@ def ask_ai(prompt_text):
             messages=[{"role": "user", "content": prompt_text}]
         )
         reply = response.choices[0].message.content
-        # 强制替换 LaTeX 语法，确保 Streamlit 能渲染公式
+        
+        # ================= 终极清洗大法 =================
+        # 1. 统一各种奇奇怪怪的包裹符号为 $$
         reply = reply.replace(r"\[", "$$").replace(r"\]", "$$")
         reply = reply.replace(r"\(", "$").replace(r"\)", "$")
+        
+        # 2. 强制给所有的 $$ 前后加上换行符，防止被 Streamlit 当成普通文本
+        reply = reply.replace("$$", "\n$$\n")
+        
+        # 3. 清理掉多余的空行（把3个以上的换行变成一个）
+        reply = re.sub(r'\n{3,}', '\n\n', reply)
+        
+        # 4. 修复大模型导致的 Markdown 标题粘连问题（比如强制给 ### 前面加换行）
+        reply = re.sub(r'(?<!\n)(###)', r'\n\1', reply)
+        
+        # ================================================
+        
         return reply, None
     except Exception as e:
         return None, f"调用 AI 失败: {e}"
