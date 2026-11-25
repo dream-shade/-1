@@ -3,6 +3,7 @@ from pathlib import Path
 from openai import OpenAI
 from aip import AipOcr
 import json
+import re
 
 st.title("🧠 AI 高数解题器")
 st.markdown("支持拍照批量解析与文字直接输入，公式自动渲染。")
@@ -18,12 +19,9 @@ notes_path = DATA_DIR / "math_notes.json"
 
 # 尝试从 Streamlit 的 secrets 中读取，如果没有（比如在本地跑），再读 txt 文件
 try:
-
     APP_ID = st.secrets["baidu"]["APP_ID"]
     API_KEY = st.secrets["baidu"]["API_KEY"]
     SECRET_KEY = st.secrets["baidu"]["SECRET_KEY"]
-
-    # DeepSeek
     DS_KEY = st.secrets["deepseek"]["DS_KEY"]
 except Exception:
     # 本地开发环境的兜底
@@ -43,8 +41,6 @@ ds_client = OpenAI(api_key=DS_KEY, base_url="https://api.deepseek.com")
 
 
 # ================= 2. 核心函数区 =================
-import re
-
 def ask_ai(prompt_text):
     """公共的大模型调用函数"""
     try:
@@ -55,19 +51,11 @@ def ask_ai(prompt_text):
         reply = response.choices[0].message.content
         
         # ================= 终极清洗大法 =================
-        # 1. 统一各种奇奇怪怪的包裹符号为 $$
         reply = reply.replace(r"\[", "$$").replace(r"\]", "$$")
         reply = reply.replace(r"\(", "$").replace(r"\)", "$")
-        
-        # 2. 强制给所有的 $$ 前后加上换行符，防止被 Streamlit 当成普通文本
         reply = reply.replace("$$", "\n$$\n")
-        
-        # 3. 清理掉多余的空行（把3个以上的换行变成一个）
         reply = re.sub(r'\n{3,}', '\n\n', reply)
-        
-        # 4. 修复大模型导致的 Markdown 标题粘连问题（比如强制给 ### 前面加换行）
         reply = re.sub(r'(?<!\n)(###)', r'\n\1', reply)
-        
         # ================================================
         
         return reply, None
@@ -76,7 +64,7 @@ def ask_ai(prompt_text):
 
 def process_image(file_obj):
     """处理图片:OCR + 大模型解题"""
-    file_obj.seek(0) # 核心修复：把指针拨回开头
+    file_obj.seek(0) 
     image_bytes = file_obj.read()
     
     result = ocr_client.basicGeneral(image_bytes)
@@ -114,9 +102,11 @@ def save_to_file(question, answer):
 # ================= 3. 前端 UI 渲染 =================
 # --- 侧边栏：历史错题本 ---
 st.sidebar.title("📚 历史错题本")
+
 if notes_path.exists():
     try:
         notes_data = json.loads(notes_path.read_text(encoding="utf-8"))
+        # 倒序展示，最新的在上面
         for i, note in enumerate(reversed(notes_data)):
             with st.sidebar.expander(f"历史题 {len(notes_data) - i}"):
                 st.write(note['question'])
@@ -125,6 +115,14 @@ if notes_path.exists():
         st.sidebar.error("读取历史记录失败")
 else:
     st.sidebar.info("暂无历史错题")
+
+# 清空按钮
+st.sidebar.markdown("---") 
+if st.sidebar.button("🗑️ 清空所有错题"):
+    if notes_path.exists():
+        notes_path.unlink() 
+        st.sidebar.success("历史记录已清空！")
+        st.rerun() 
 
 # --- 主界面：Tabs ---
 tab1, tab2 = st.tabs(["📷 拍照批量解析", "⌨️ 文字直接输入"])
@@ -151,8 +149,6 @@ with tab1:
                     st.write(text)
                 st.markdown("### 📝 解析结果")
                 st.markdown(reply)
-                
-                # 核心：保存到错题本
                 save_to_file(text, reply)
             else:
                 st.error(reply)
@@ -178,13 +174,11 @@ with tab2:
                 else:
                     st.markdown("### 📝 解析结果")
                     st.markdown(reply)
-                    
-                    # 核心：保存到错题本
                     save_to_file(user_text, reply)
         else:
             st.warning("请先输入题目内容！")
 
-    # 核心：新增的追问功能
+    # 追问功能
     st.divider()
     st.subheader("💬 对解析有疑问？继续追问 AI 老师")
     follow_up = st.chat_input("例如：请把第一步再详细解释一下...")
